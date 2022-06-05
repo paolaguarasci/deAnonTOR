@@ -1,0 +1,9 @@
+auto ens5
+#iface ens5 inet dhcp
+iface ens5 inet static
+    address 192.168.2.5/24
+    gateway 192.168.2.254
+    dns-nameservers 8.8.8.8 8.8.4.4
+    up ip route add 192.168.1.0/24 via 192.168.2.1 dev ens5
+
+    # in sysctl -p /etc/sysctl.conf  decommentare net.ipv4.ip_forward=1
