@@ -15,9 +15,9 @@ finger1=$(sudo cat /var/lib/tor/keys/authority_certificate  | grep fingerprint |
 finger2=$(sudo cat /var/lib/tor/fingerprint | cut -f 2 -d ' ')
 HOSTNAME=$(hostname -s)
 
-echo $finger1   # 7D727F6C262E254CB501B05EFC4DE981C3C76AB9
-echo $finger2   # E52F69BE42EA667C7D259B8AE211308E12F60EB9
-echo $HOSTNAME  # debian
+echo $finger1   # 17AEB664E6B11612F0C12CA83C0FB5A110910044
+echo $finger2   # 8F7C994533746B5169C9EE5915BD3BF1AF4237D6
+echo $HOSTNAME  # dirserver
 
 sudo mv /etc/tor/torrc /etc/tor/torrc.bak
 sudo -u debian-tor nano /etc/tor/torrc
