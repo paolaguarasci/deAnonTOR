@@ -1,0 +1,125 @@
+TestingTorNetwork 1
+
+PidFile /var/lib/tor/pid
+DataDirectory /var/lib/tor
+Log notice file /var/log/tor/notice.log
+Log info file /var/log/tor/info.log
+Log debug file /var/log/tor/debug.log
+
+## Rapid Bootstrap Testing Options ##
+# These typically launch a working minimal Tor network in ~20s
+# These parameters make tor networks bootstrap fast,
+# but can cause consensus instability and network unreliability
+# (Some are also bad for security.)
+#
+# We need at least 3 descriptors to build circuits.
+# In a 3 relay network, 0.67 > 2/3, so we try hard to get 3 descriptors.
+# In larger networks, 0.67 > 2/N, so we try hard to get >=3 descriptors.
+PathsNeededToBuildCircuits 0.67
+TestingDirAuthVoteExit *
+TestingDirAuthVoteHSDir *
+V3AuthNIntervalsValid 2
+
+## Always On Testing Options ##
+# We enable TestingDirAuthVoteGuard to avoid Guard stability requirements
+TestingDirAuthVoteGuard *
+# We set TestingMinExitFlagThreshold to 0 to avoid Exit bandwidth requirements
+TestingMinExitFlagThreshold 0
+# VoteOnHidServDirectoriesV2 needs to be set for HSDirs to get the HSDir flag
+#Default VoteOnHidServDirectoriesV2 1
+
+## Options that we always want to test ##
+RunAsDaemon 1
+ConnLimit 60
+
+# Let tor close connections gracefully before exiting
+ShutdownWaitLength 2
+DisableDebuggerAttachment 0
+
+ControlPort 8003
+# Use ControlSocket rather than ControlPort unix: to support older tors
+CookieAuthentication 1
+
+ProtocolWarnings 1
+SafeLogging 0
+LogTimeGranularity 1
+
+# Options that we can disable at runtime, based on env vars
+
+# Use tor's sandbox. Defaults to 1 on Linux, and 0 on other platforms.
+# Use CHUTNEY_TOR_SANDBOX=0 to disable, if tor's sandbox doesn't work with
+# your glibc.
+Sandbox 1
+
+# Ask all child tor processes to exit when chutney's test-network.sh exits
+# (if the CHUTNEY_*_TIME options leave the network running, this option is
+# disabled)
+#__OwningControllerProcess 0
+
+DirAuthority relay1 orport=5000 no-v2 v3ident=7FB28B3B8FBFAE5756167DB4395A15CB541FFAC8 10.0.0.101:7000 52F9C69D33E6E304396339F013B5F01160AF34FF
+DirAuthority relay2 orport=5000 no-v2 v3ident=B864C54C75CBA2AD8DF0DFD1BCD3A1BAF1FD68A1 10.0.0.102:7000 45CB1F23B946B77875BC47AD84746B40A5129BC3
+DirAuthority relay3 orport=5000 no-v2 v3ident=3DBBD860684C84FE6B76BBFDFAF161E2A621998C 10.0.0.103:7000 161562507D119F13A3D9F65257A547B69D59AB10
+
+SocksPort 0
+OrPort 5000
+
+
+# Must be included before exit-v{4,6}.i
+ExitRelay 0
+
+# These options are set here so they apply to IPv4 and IPv6 Exits
+#
+# Tell Exits to avoid using DNS: otherwise, chutney will fail if DNS fails
+# (Chutney only accesses 127.0.0.1 and ::1, so it doesn't need DNS)
+ServerDNSDetectHijacking 0
+ServerDNSTestAddresses
+# If this option is /dev/null, or any other empty or unreadable file, tor exits
+# will not use DNS. Otherwise, DNS is enabled with this config.
+# (If the following line is commented out, tor uses /etc/resolv.conf.)
+ServerDNSResolvConfFile /etc/resolv.conf
+
+DirPort 7000
+
+
+# This file is named "relay.tmpl" for compatibility with previous
+# chutney versions
+
+# An exit relay that can exit to IPv4 localhost
+# (newer versions of tor need this to be explicitly configured)
+
+# Must be included after relay-non-exit.tmpl
+ExitRelay 1
+
+# 1. Allow exiting to IPv4 localhost and private networks by default
+# -------------------------------------------------------------
+
+# Each IPv4 tor instance is configured with Address 127.0.0.1 by default
+ExitPolicy accept 127.0.0.0/8:*
+
+# If you only want tor to connect to localhost, disable these lines:
+# This may cause network failures in some circumstances
+ExitPolicyRejectPrivate 0
+ExitPolicy accept private:*
+
+# 2. Optionally: Allow exiting to the entire IPv4 internet on HTTP(S)
+# -------------------------------------------------------------------
+
+# 2. or 3. are required to work around #11264 with microdescriptors enabled
+# "The core of this issue appears to be that the Exit flag code is
+#  optimistic (just needs a /8 and 2 ports), but the microdescriptor
+#  exit policy summary code is pessimistic (needs the entire internet)."
+# An alternative is to disable microdescriptors and use regular
+# descriptors, as they do not suffer from this issue.
+#ExitPolicy accept *:80
+#ExitPolicy accept *:443
+
+# 3. Optionally: Accept all IPv4 addresses, that is, the public internet
+# ----------------------------------------------------------------------
+ExitPolicy accept *:*
+
+# 4. Finally, reject all IPv4 addresses which haven't been permitted
+# ------------------------------------------------------------------
+ExitPolicy reject *:*
+
+Nickname relay5
+Address 10.0.0.105

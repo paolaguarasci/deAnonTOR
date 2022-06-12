@@ -1,0 +1,77 @@
+TestingTorNetwork 1
+
+PidFile /var/lib/tor/pid
+DataDirectory /var/lib/tor
+Log notice file /var/log/tor/notice.log
+Log info file /var/log/tor/info.log
+Log debug file /var/log/tor/debug.log
+
+PathsNeededToBuildCircuits 0.67
+TestingDirAuthVoteExit *
+TestingDirAuthVoteHSDir *
+V3AuthNIntervalsValid 2
+
+TestingDirAuthVoteGuard *
+TestingMinExitFlagThreshold 0
+RunAsDaemon 1
+ConnLimit 60
+Nickname relay1
+ShutdownWaitLength 2
+DisableDebuggerAttachment 0
+
+ControlPort 8000
+
+CookieAuthentication 1
+ProtocolWarnings 1
+SafeLogging 0
+LogTimeGranularity 1
+
+# Sandbox 1
+
+DirAuthority relay1 orport=5000 no-v2 v3ident=7FB28B3B8FBFAE5756167DB4395A15CB541FFAC8 10.0.0.101:7000 52F9C69D33E6E304396339F013B5F01160AF34FF
+DirAuthority relay2 orport=5000 no-v2 v3ident=B864C54C75CBA2AD8DF0DFD1BCD3A1BAF1FD68A1 10.0.0.102:7000 45CB1F23B946B77875BC47AD84746B40A5129BC3
+DirAuthority relay3 orport=5000 no-v2 v3ident=3DBBD860684C84FE6B76BBFDFAF161E2A621998C 10.0.0.103:7000 161562507D119F13A3D9F65257A547B69D59AB10
+
+SocksPort 0
+OrPort 5000
+Address 10.0.0.101
+
+ExitRelay 0
+
+ServerDNSDetectHijacking 0
+ServerDNSTestAddresses
+ServerDNSResolvConfFile /etc/resolv.conf
+
+DirPort 7000
+
+AuthoritativeDirectory 1
+V3AuthoritativeDirectory 1
+ContactInfo auth0@test.test
+
+AssumeReachable 1
+
+# Speed up the consensus cycle as fast as it will go.
+# If clock desynchronisation is an issue, increase these voting times.
+
+# V3AuthVotingInterval and TestingV3AuthInitialVotingInterval can be:
+#   10, 12, 15, 18, 20, ...
+# TestingV3AuthInitialVotingInterval can also be:
+#    5, 6, 8, 9
+# They both need to evenly divide 24 hours.
+
+# Initial Vote + Initial Dist must be less than Initial Interval
+#
+# Mixed 0.3.3 and 0.3.4 networks are unstable, due to timing changes.
+# When all 0.3.3 and earlier versions are obsolete, we may be able to revert to
+# TestingV3AuthInitialVotingInterval 5
+TestingV3AuthInitialVotingInterval 20
+TestingV3AuthInitialVoteDelay 4
+TestingV3AuthInitialDistDelay 4
+# Vote + Dist must be less than Interval/2, because when there's no consensus,
+# tor uses Interval/2 as the voting interval
+#
+# Keep in sync with scripts/chutney_tests/verify.py V3_AUTH_VOTING_INTERVAL
+V3AuthVotingInterval 20
+V3AuthVoteDelay 4
+V3AuthDistDelay 4
+

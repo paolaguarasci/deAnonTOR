@@ -1,0 +1,150 @@
+// Inizializza la pagina.
+$.ajaxSetup ({  
+	cache: false  
+});
+
+var g_urlSsi = "/sito/notizie/elezioni/election_day_2022/ssi/";
+
+function initPannello() {
+	mostraPannello(g_tabAttuale);
+}
+
+function PRefreshLive() {	
+	mostraPannello(g_tabAttuale);
+}
+// tabAttuale: 'C', 'R', 'REF', ecc.
+function mostraPannello(tabAttuale) {
+	g_tabAttuale = tabAttuale;
+	
+	var url = g_urlSsi + "panel_" + tabAttuale;
+
+/* OLD: ora un PRE per ogni tipo di elezione
+	if (g_pre == "PRE")
+		url += "_pre";
+*/		
+	var pre;
+	switch(tabAttuale) {
+		case 'C'  : pre = g_preC;   break;
+		case 'R'  : pre = g_preR;   break;
+		case 'REF': pre = g_preREF; break;
+		default: pre = g_preC; // solo per sicurezza
+	}
+	if (pre == "PRE")
+		url += "_pre";
+
+	//----- Modifica url per referendum perhè in questa versione ha semplicemente 3 pannelli distinti
+	//----- (pre, affluenza e scrutini) e non serve caricare dentro a seconda del menu (per esempio non ci sono proiezioni, ecc...)
+	if (tabAttuale == "REF" && pre != "PRE") {
+		switch(g_menuReferendumAttuale) {
+			case "A": url += "_A";  break;
+			case "S": url += "_S";  break;
+			default: url += "_S";
+		}
+	}
+	//-------------------------------------------
+
+	url += ".html";
+
+	$.get(url, function(data) {
+
+		$("#election-content").html(data);
+
+		$("#id-tab-elezione-REF").removeClass("sel");
+		$("#id-tab-elezione-R").removeClass("sel");
+		
+		$("#id-tab-elezione-C").removeClass("sel");
+			
+		$("#id-tab-elezione-" + tabAttuale).addClass("sel");
+
+//		if (g_pre != "PRE") { //  OLD: ora un PRE per ogni tipo di elezione
+		if (pre != "PRE") {
+/* 2022: non ci sono menu quindi ho caricato tutto dentro la pagina (vedi url sopra).
+			if (tabAttuale == 'REF')
+				mostraContenutoReferendum(tabAttuale, g_menuReferendumAttuale);
+			else */
+			if (tabAttuale == 'R')
+				mostraContenuto(tabAttuale, g_menuAttualeR);
+			else if (tabAttuale == 'C')
+				mostraContenuto(tabAttuale, g_menuAttualeC);
+		}
+	});
+	
+}
+
+function mostraContenuto(tabAttuale, menuAttuale) {
+/* NB: scommentare se per le comunali non abbiamo gli exit poll
+	// Per le comunali non abbiamo gli exitpoll.
+	if (tabAttuale == "C" && menuAttuale == "E")
+		menuAttuale = "L"
+*/	
+
+/* NB: se il default del menu � uguale per tutti i tipi di elezione.
+	g_menuAttuale = menuAttuale;
+*/
+	// Con default menu differenziato per elezioni differenti.
+	if (tabAttuale == "R")
+		g_menuAttualeR = menuAttuale;
+	else if (tabAttuale == "C")
+		g_menuAttualeC = menuAttuale;
+	/* ecc... else if (tabAttuale == "X")
+		g_menuAttualeX = menuAttuale; */
+
+			
+	var url = g_urlSsi + "dati_" + tabAttuale + menuAttuale + ".html";
+
+
+	$.get(url, function(data) {
+		$("#elezioni-dati").html(data);
+		
+		$("#id-tab-dati-L").removeClass("sel");
+		$("#id-tab-dati-E").removeClass("sel");
+		$("#id-tab-dati-P").removeClass("sel");
+		$("#id-tab-dati-S").removeClass("sel");
+		
+		$("#id-tab-dati-" + menuAttuale).addClass("sel");
+		
+		$("#BtRefreshRE").hide();
+		$("#BtRefreshRP").hide();
+		$("#BtRefreshRS").hide();
+		
+		if (menuAttuale != "L")
+			$("#BtRefreshR" + menuAttuale).show();
+
+/* OLD: vecchia gestione: prima c'era un solo pulsante sotto il menu; ora uno per ogni pulante messo affianco. 		
+		if (tabAttuale == "E") {
+			if (menuAttuale == "L") {
+				$("#id-tab-aggiorna").hide()
+				$("#id-barra-verticale").hide()
+			} else {
+				$("#id-tab-aggiorna").show()
+				$("#id-barra-verticale").show()				
+			}
+		}
+*/		
+	});
+}
+
+function mostraContenutoReferendum(tabAttuale, menuAttuale) {
+	g_menuReferendumAttuale = menuAttuale;
+			
+	var url = g_urlSsi + "dati_" + tabAttuale + menuAttuale + ".html";
+
+	$.get(url, function(data) {
+		$("#elezioni-dati").html(data);
+
+		$("#id-tab-dati-E" ).removeClass("sel");
+		$("#id-tab-dati-P" ).removeClass("sel");
+		$("#id-tab-dati-I" ).removeClass("sel");
+		$("#id-tab-dati-IE").removeClass("sel");
+			
+		$("#id-tab-dati-" + menuAttuale).addClass("sel");
+
+		$("#BtRefreshE" ).hide();
+		$("#BtRefreshP" ).hide();
+		$("#BtRefreshI" ).hide();
+		$("#BtRefreshIE").hide();
+		
+		$("#BtRefresh" + menuAttuale).show();
+	});
+}
+

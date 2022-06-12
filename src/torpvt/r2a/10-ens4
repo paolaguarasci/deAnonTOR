@@ -1,0 +1,5 @@
+auto ens4
+#iface ens4 inet dhcp
+iface ens4 inet static
+    address 10.0.0.102/24
+    gateway 10.0.0.1
