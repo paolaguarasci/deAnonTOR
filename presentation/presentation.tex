@@ -2,18 +2,52 @@
 \usetheme{Madrid}
 \setbeamertemplate{navigation symbols}{}
 
-\title[DeAnon Tor]{DeAnonimize TOR Network}
-\subtitle[]{whit fingerprinting}
-\author[]{Paola Guarasci}
-\institute[Unical]{Università della Calabria}
+\title[DeAnonTor]{DeAnonimize TOR Network}
+\subtitle[]{whit fingerprinting analisys}
+\author[Paola Guarasci]{Paola Guarasci}
+% \institute[Unical]{Università della Calabria}
 \date[06/2022]{July 2022}
+
+% Description of the specific BCP (BEST CURRENT PRACTICE)/CWE/CVE number, or in general, of the project topic.
+% Whenever applicable, description of the technological context of the assigned BCP/CWE/CVE/General topic, including criticism, if any (e.g. show that a given BCP is outdated and why, etc.)
+% Examples (for a CWE, an example can consist in a specific CVE)
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}
-\frametitle{Sample frame title}
-This is some text in the first frame. This is some text in the first frame. This is some text in the first frame.
+  \frametitle{Descrizione del progetto}
+  Il progetto prevede la deanonimizzazione di un utente TOR a partire dalle fingerprint dei siti web visitati. In particolare e' possibile creare una correlazione tra le risorse e il traffico generato per la loro fruizione. 
+  
 \end{frame}
 
+\begin{frame}
+  \frametitle{Aspetti tecnici}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Laboratorio}
+  Il laboratio GNS3 realizzato per questo progetto conta un totale di 10 host Debian 11 emulati con QEMU, 3 router Cisco 7200 e 4 switch Cisco 3745.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.60\textwidth]{../img/topology.png}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rete Tor}
+  La rete Tor e' stata creata partendo dalle configurazioni suggerite dal simulatore di reti Tor private (Chutney). Al suo interno la rete e' divisa in:
+  \begin{itemize}
+    \item 3 DA (Relay autoritativi)
+    \item 4 Relay di uscita
+  \end{itemize}
+  Ognuno di questi host ha un accesso diretto alla rete interna del laboratorio, per simulare il piu' possibile il fatto che presumibilmente in un contesto reale questi server dispongono di un ip pubblico. 
+  La configurazione con 3 directory autority e' conseguenza di alcuni espreimenti in cui la rete non funzionava a dovere e ho poi compreso che le reti Tor necessitano di almeno 3 host auth/mid/exit per creare le rotte. In questi 3 elementi pero' ogni host non include se stesso. Questa configurazione 3+4 e' per me la configurazione minima funzionante. 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Nuova slide}
+\end{frame}
 \end{document}
