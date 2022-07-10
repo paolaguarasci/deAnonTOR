@@ -49,25 +49,25 @@
   Il progetto prevede la deanonimizzazione di un utente TOR a partire dalle fingerprint dei siti web visitati.
   \\In particolare e' possibile creare una correlazione tra le risorse e il traffico generato per la loro fruizione.
   \\La correlazione avviene facendo un'analisi statistica dei pacchetti TCP che vengono viaggiano attraverso la rete TOR.\@
-  Il primo paper e' del 2013 e riporta uno studio condotto in closed-world su un campione di 750 siti web. In particolare si parla di pagine, non di siti interi. 
+  Il primo paper e' del 2013 e riporta uno studio condotto in closed-world su un campione di 750 siti web. In particolare si parla di pagine, non di siti interi.
 \end{frame}
 
 \begin{frame}
   \frametitle{Aspetti tecnici}
-  Un attacco fingerprint puo' essere realizzato in ambiente chiuso e in ambiente aperto. In ambiente chiuso Darth e' ha conoscenza di tutti i siti web visitati dall'utente TOR, in ambiente aperto invece il Alice e Bob possono visitare ogni sito web esistente. 
-  Per realizzare questo progetto e' stato creato un ambiente chiuso, in GNS3, in cui il possibile ventaglio dei siti visitabilio e' limitato a 5. 
-  Nel blog del progetto TOR si trova una \href{https://blog.torproject.org/critique-website-traffic-fingerprinting-attacks/}{descrizione}  piu' dettagliata di questo tipo di attacco. 
-  Un attacco di questo tipo prevede che Darth si posizione tra il client e il primo relay del circuito, il Guard relay. Potrebbe ad esempio essere sfruttato da un ISP per censurare alcuni contenuti. 
+  Un attacco fingerprint puo' essere realizzato in ambiente chiuso e in ambiente aperto. In ambiente chiuso Darth e' ha conoscenza di tutti i siti web visitati dall'utente TOR, in ambiente aperto invece il Alice e Bob possono visitare ogni sito web esistente.
+  Per realizzare questo progetto e' stato creato un ambiente chiuso, in GNS3, in cui il possibile ventaglio dei siti visitabilio e' limitato a 5.
+  Nel blog del progetto TOR si trova una \href{https://blog.torproject.org/critique-website-traffic-fingerprinting-attacks/}{descrizione}  piu' dettagliata di questo tipo di attacco.
+  Un attacco di questo tipo prevede che Darth si posizione tra il client e il primo relay del circuito, il Guard relay. Potrebbe ad esempio essere sfruttato da un ISP per censurare alcuni contenuti.
   \\ Le informazioni analizzare sono: lunghezza dei pacchetti, timing.
 \end{frame}
 
 \begin{frame}
   \frametitle{Elenco Metodologie DeAnonimize}
-    Le metodologie di attacco sono le seguenti:
-    \begin{itemize}
-      \item Sniffing tra client e ISP
-      \item Sniffing tra client e ISP e tra WebServer e ISP
-    \end{itemize}
+  Le metodologie di attacco sono le seguenti:
+  \begin{itemize}
+    \item Sniffing tra client e ISP
+    \item Sniffing tra client e ISP e tra WebServer e ISP
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -95,7 +95,7 @@
     \item 4 Relay di uscita
   \end{itemize}
   Ognuno di questi host ha un accesso diretto alla rete interna del laboratorio, per simulare il piu' possibile il fatto che presumibilmente in un contesto reale questi server dispongono di un ip pubblico.
-  La configurazione con 3 directory autority e' conseguenza di alcuni espreimenti in cui la rete non funzionava a dovere e ho poi compreso che le reti Tor necessitano di almeno 3 host auth/mid/exit per creare le rotte. 
+  La configurazione con 3 directory autority e' conseguenza di alcuni espreimenti in cui la rete non funzionava a dovere e ho poi compreso che le reti Tor necessitano di almeno 3 host auth/mid/exit per creare le rotte.
   In questi 3 elementi pero' ogni host non include se stesso. Questa configurazione 3+4 e' per me la configurazione minima funzionante.
 \end{frame}
 
@@ -118,6 +118,37 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Confronti 1}
+  \begin{columns}[T]
+    \begin{column}{0.33\textwidth}
+      \begin{center}
+        \includegraphics[width=\textwidth]{../img/ansa-figure.png}
+        \includegraphics[width=\textwidth]{../img/archlinux-figure.png}
+      \end{center}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{center}
+        \includegraphics[width=\textwidth]{../img/facebook-figure.png}
+        \includegraphics[width=0.5\textwidth]{../img/questionMark.png}
+      \end{center}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{center}
+        \includegraphics[width=\textwidth]{../img/unical-figure.png}
+        \includegraphics[width=\textwidth]{../img/youtube-figure.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Confronti 2}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.851\textwidth]{../img/random-figure.png}
+  \end{figure}
+\end{frame}
 
 
 %% \begin{frame}
