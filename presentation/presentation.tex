@@ -35,7 +35,7 @@
 \subtitle[]{whit fingerprinting analisys}
 \author[Paola Guarasci]{Paola Guarasci}
 % \institute[Unical]{Università della Calabria}
-\date[06/2022]{July 2022}
+\date[07/2022]{July 2022}
 
 % Description of the specific BCP (BEST CURRENT PRACTICE)/CWE/CVE number, or in general, of the project topic.
 % Whenever applicable, description of the technological context of the assigned BCP/CWE/CVE/General topic, including criticism, if any (e.g. show that a given BCP is outdated and why, etc.)
@@ -48,7 +48,7 @@
   \frametitle{Descrizione del progetto}
   Il progetto prevede la deanonimizzazione di un utente TOR a partire dalle fingerprint dei siti web visitati.
   \\In particolare e' possibile creare una correlazione tra le risorse e il traffico generato per la loro fruizione.
-  \\La correlazione avviene facendo un'analisi statistica dei pacchetti TCP che vengono viaggiano attraverso la rete TOR.
+  \\La correlazione avviene facendo un'analisi statistica dei pacchetti TCP che vengono viaggiano attraverso la rete TOR.\@
   Il primo paper e' del 2013 e riporta uno studio condotto in closed-world su un campione di 750 siti web. In particolare si parla di pagine, non di siti interi. 
 \end{frame}
 
@@ -58,7 +58,23 @@
   Per realizzare questo progetto e' stato creato un ambiente chiuso, in GNS3, in cui il possibile ventaglio dei siti visitabilio e' limitato a 5. 
   Nel blog del progetto TOR si trova una \href{https://blog.torproject.org/critique-website-traffic-fingerprinting-attacks/}{descrizione}  piu' dettagliata di questo tipo di attacco. 
   Un attacco di questo tipo prevede che Darth si posizione tra il client e il primo relay del circuito, il Guard relay. Potrebbe ad esempio essere sfruttato da un ISP per censurare alcuni contenuti. 
-  \\ Le informazioni analizzare sono: lunghezza dei pacchetti, timing....
+  \\ Le informazioni analizzare sono: lunghezza dei pacchetti, timing.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Elenco Metodologie DeAnonimize}
+    Le metodologie di attacco sono le seguenti:
+    \begin{itemize}
+      \item Sniffing tra client e ISP
+      \item Sniffing tra client e ISP e tra WebServer e ISP
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Descrizione Demo}
+  La medotologia scelta per la demo e' lo Sniffing tra Client e ISP.\@
+  \\ Questo tipo di attacco consente di comprendere quali website sta visitando il nostro target, anche se il traffico passa attraverso una rete TOR.\@ Il punto principale dell'attacco e' l'analisi dei pacchetti.\@
+  \\ Quindi facendo inferenze su dimensione, direzione e quantita' dei pacchetti TCP (le fingerprint) si puo' ipotizzare a quale sito (noto) appartiene il traffico generato.
 \end{frame}
 
 \begin{frame}
@@ -90,6 +106,16 @@
     \centering
     \includegraphics[width=0.851\textwidth]{../img/terminali_2.png}
   \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Esecuzione di un attacco}
+  \begin{itemize}
+    \item Wireshark in ascolto su link client-isp
+    \item Visita di un sito random da parte del client
+    \item Generazione delle fingerprint (python, su macchina host, da cattura in csv)
+    \item Confronto tra grafico random e grafici noti
+  \end{itemize}
 \end{frame}
 
 
