@@ -8,7 +8,7 @@ def makeFinerprint(fname):
   df = pd.read_csv("training/"+fname, sep=',')
   # "No.","Time","Source","Destination","Protocol","Length","Info"
 
-  # Da usare solo con il csv di Whireshark, non server con tshark.
+  # Da usare solo con il csv di Whireshark, non serve con tshark.
   df.drop("Info", axis=1, inplace=True)
   df.drop("No.", axis=1, inplace=True)
   df.drop("Time", axis=1, inplace=True)
