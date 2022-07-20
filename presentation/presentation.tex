@@ -48,27 +48,40 @@
   \frametitle{Descrizione del progetto}
   Il progetto prevede la deanonimizzazione di un utente TOR a partire dalle fingerprint dei siti web visitati.
   \\In particolare e' possibile creare una correlazione tra le risorse e il traffico generato per la loro fruizione.
-  \\La correlazione avviene facendo un'analisi statistica dei pacchetti TCP che vengono viaggiano attraverso la rete TOR.\@
-  Il primo paper e' del 2013 e riporta uno studio condotto in closed-world su un campione di 750 siti web. In particolare si parla di pagine, non di siti interi.
+  \\La correlazione avviene facendo un'analisi statistica dei pacchetti TCP che viaggiano attraverso la rete TOR.\@
+\end{frame}
+
+\begin{frame}
+  \frametitle{Come funziona TOR}
+  La rete Tor e' una rete di server connessi tra loro attraverso tunnel virtuali (detti circuiti) che consentono di anonimizzare il traffico su internet.
+  \\ Il protocollo di connessione e' detto Onion perche', proprio come gli strati di una cipolla, aggiunge layer di crittazione ad ogni "rimbalzo" che compiono i dati originali. 
+  \\ All'interno della rete TOR abbiamo tre tipi di server:
+  \begin{itemize}
+    \item \textbf{Guard Relay} Nodo di entrata della rete
+    \item \textbf{Middle Relay} Uno o piu' server interni al circuito
+    \item \textbf{Exit Relay} Nodo di uscita dalla rete (comunica in chiaro con l'application server)
+  \end{itemize}
+  Esiste poi un server particolare, detto \textbf{Directory Server} che rilascia ai client le liste di nodi della rete. 
+  \\ La generazione del circuito avviene casualmente. La selezione del circuito e' ad opera del client TOR. 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Attacchi alla rete TOR}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.70\textwidth]{../img/torAttack.png}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Aspetti tecnici}
-  Un attacco fingerprint puo' essere realizzato in ambiente chiuso e in ambiente aperto. In ambiente chiuso Darth e' ha conoscenza di tutti i siti web visitati dall'utente TOR, in ambiente aperto invece il Alice e Bob possono visitare ogni sito web esistente.
-  Per realizzare questo progetto e' stato creato un ambiente chiuso, in GNS3, in cui il possibile ventaglio dei siti visitabilio e' limitato a 5.
+  Un attacco fingerprint puo' essere realizzato in ambiente chiuso e in ambiente aperto. In ambiente chiuso Darth e' a conoscenza di tutti i siti web visitati dall'utente TOR, in ambiente aperto invece Alice e Bob possono visitare ogni sito web esistente.
+  Per realizzare questo progetto e' stato creato un ambiente chiuso, in GNS3, in cui il possibile ventaglio dei siti visitabili e' limitato a 5.
   Nel blog del progetto TOR si trova una \href{https://blog.torproject.org/critique-website-traffic-fingerprinting-attacks/}{descrizione}  piu' dettagliata di questo tipo di attacco.
-  Un attacco di questo tipo prevede che Darth si posizione tra il client e il primo relay del circuito, il Guard relay. Potrebbe ad esempio essere sfruttato da un ISP per censurare alcuni contenuti.
+  Un attacco di questo tipo prevede che Darth si posizioni tra il client e il primo relay del circuito, il Guard relay. Potrebbe ad esempio essere sfruttato da un ISP per censurare alcuni contenuti.
   \\ Le informazioni analizzare sono: lunghezza dei pacchetti, timing.
 \end{frame}
 
-\begin{frame}
-  \frametitle{Elenco Metodologie DeAnonimize}
-  Le metodologie di attacco sono le seguenti:
-  \begin{itemize}
-    \item Sniffing tra client e ISP
-    \item Sniffing tra client e ISP e tra WebServer e ISP
-  \end{itemize}
-\end{frame}
 
 \begin{frame}
   \frametitle{Descrizione Demo}
@@ -95,7 +108,7 @@
     \item 4 Relay di uscita
   \end{itemize}
   Ognuno di questi host ha un accesso diretto alla rete interna del laboratorio, per simulare il piu' possibile il fatto che presumibilmente in un contesto reale questi server dispongono di un ip pubblico.
-  La configurazione con 3 directory autority e' conseguenza di alcuni espreimenti in cui la rete non funzionava a dovere e ho poi compreso che le reti Tor necessitano di almeno 3 host auth/mid/exit per creare le rotte.
+  La configurazione con 3 directory autority e' conseguenza di alcuni esperimenti in cui la rete non funzionava a dovere e ho poi compreso che le reti Tor necessitano di almeno 3 host auth/mid/exit per creare le rotte.
   In questi 3 elementi pero' ogni host non include se stesso. Questa configurazione 3+4 e' per me la configurazione minima funzionante.
 \end{frame}
 
@@ -110,6 +123,8 @@
 
 \begin{frame}
   \frametitle{Esecuzione di un attacco}
+  Preparazione: Analisi di traffico noto e generazione di grafici per il successivo confronto.
+  \\Esecuzione: 
   \begin{itemize}
     \item Wireshark in ascolto su link client-isp
     \item Visita di un sito random da parte del client
